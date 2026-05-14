@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>The Chain Rule | AP Calculus AB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400;1,700&family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css"/>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"
+  onload="renderMathInElement(document.body,{delimiters:[{left:'$$',right:'$$',display:true},{left:'\\(',right:'\\)',display:false},{left:'\\[',right:'\\]',display:true}]})"></script>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0c1a2e;
+  --paper:#f0f8ff;
+  --paper2:#e0f2fe;
+  --paper3:#bae6fd;
+  --accent:#0284c7;
+  --accent-light:#e0f2fe;
+  --accent2:#0369a1;
+  --accent2-light:#dbeafe;
+  --green:#166534;
+  --green-light:#dcfce7;
+  --red:#991b1b;
+  --red-light:#fef2f2;
+  --muted:#4a6080;
+  --border:#bae6fd;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'DM Sans',sans-serif;background:var(--paper);color:var(--ink);line-height:1.7;font-size:16px}
+
+/* HERO */
+.hero{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:3rem 2rem;background:var(--ink);color:var(--paper);position:relative;overflow:hidden}
+.hero-dots{position:absolute;inset:0;background-image:radial-gradient(rgba(255,255,255,.07) 1px,transparent 1px);background-size:32px 32px}
+.hero-glow{position:absolute;width:600px;height:600px;border-radius:50%;background:radial-gradient(circle,rgba(2,132,199,.35),transparent 70%);top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none}
+.hero-tag{font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#7dd3fc;margin-bottom:1.5rem;border:1px solid #7dd3fc;display:inline-block;padding:.35rem .9rem;border-radius:999px}
+.hero h1{font-family:'Playfair Display',serif;font-size:clamp(3.2rem,9vw,7.5rem);font-weight:900;line-height:.95;letter-spacing:-.02em;margin-bottom:1.5rem}
+.hero h1 em{color:#7dd3fc;font-style:italic}
+.hero-formula{font-size:clamp(1rem,2.5vw,1.6rem);opacity:.65;margin-bottom:2rem;font-family:'DM Mono',monospace}
+.hero-sub{font-size:1rem;opacity:.55;max-width:500px;margin-bottom:.75rem}
+.hero-obj{font-size:.87rem;opacity:.42;max-width:540px;margin-bottom:2rem;font-style:italic}
+.hero-byline{font-size:.78rem;opacity:.32;font-family:'DM Mono',monospace;letter-spacing:.06em;margin-bottom:2.5rem}
+.scroll-cta{display:inline-flex;align-items:center;gap:.5rem;background:#0284c7;color:#fff;text-decoration:none;padding:.75rem 1.75rem;border-radius:999px;font-weight:500;font-size:.95rem;transition:transform .15s,background .15s}
+.scroll-cta:hover{transform:translateY(-2px);background:#0369a1}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(247,248,252,.95);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);padding:.7rem 2rem;display:flex;gap:.2rem;justify-content:center;flex-wrap:wrap}
+nav a{font-size:.82rem;font-weight:500;color:var(--muted);text-decoration:none;padding:.4rem .85rem;border-radius:999px;transition:background .12s,color .12s;white-space:nowrap}
+nav a:hover{background:var(--paper2);color:var(--ink)}
+nav a.active{background:var(--ink);color:var(--paper)}
+
+/* SECTIONS */
+section{max-width:880px;margin:0 auto;padding:5rem 2rem;border-bottom:1px solid var(--border)}
+section:last-of-type{border-bottom:none}
+.section-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.18em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+h2.section-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,5vw,3rem);font-weight:700;line-height:1.1;margin-bottom:1.75rem}
+h3.sub-title{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:600;margin:2.25rem 0 .75rem}
+p{margin-bottom:1rem}
+
+/* FORMULA CARD */
+.formula-card{background:var(--ink);color:var(--paper);border-radius:var(--radius);padding:2.5rem;text-align:center;margin:2rem 0;position:relative;overflow:hidden}
+.formula-card::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 65% 35%,rgba(2,132,199,.25),transparent 60%);pointer-events:none}
+.formula-card .formula-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;opacity:.4;margin-top:.9rem}
+.formula-card .formula-label.top{margin-top:0;margin-bottom:.9rem}
+
+/* ANALOGY BLOCK */
+.analogy{background:linear-gradient(135deg,var(--accent-light),var(--paper2));border:1px solid #7dd3fc;border-radius:var(--radius);padding:1.75rem;margin:1.5rem 0}
+.analogy .analogy-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent);margin-bottom:.75rem}
+
+/* CONCEPT GRID */
+.concept-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1rem;margin:1.5rem 0}
+.concept-card{background:var(--paper2);border:1px solid var(--border);border-radius:var(--radius);padding:1.25rem}
+.concept-card .cc-label{font-size:.72rem;font-family:'DM Mono',monospace;color:var(--muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.4rem}
+.concept-card .cc-note{font-size:.85rem;color:var(--muted);margin-top:.4rem}
+
+/* DECOMPOSITION BOX */
+.decomp{display:grid;grid-template-columns:1fr auto 1fr;gap:1rem;align-items:center;margin:1.5rem 0;background:var(--paper2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem}
+.decomp-part{text-align:center}
+.decomp-part .dp-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:.5rem}
+.decomp-part .dp-box{background:var(--ink);color:var(--paper);border-radius:8px;padding:.75rem 1rem;font-size:1rem}
+.decomp-part .dp-box.outer{background:var(--accent)}
+.decomp-part .dp-box.inner{background:var(--accent2)}
+.decomp-arrow{font-size:1.5rem;color:var(--muted);text-align:center}
+@media(max-width:520px){.decomp{grid-template-columns:1fr;}.decomp-arrow{transform:rotate(90deg)}}
+
+/* WORKED EXAMPLES */
+.example-block{border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin:1.5rem 0}
+.example-header{background:var(--ink);color:var(--paper);padding:1rem 1.5rem;display:flex;align-items:center;gap:1rem;flex-wrap:wrap}
+.example-num{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.15em;opacity:.45;text-transform:uppercase;flex-shrink:0}
+.example-question{font-weight:500;font-size:1rem}
+.steps-container{padding:0 1.5rem}
+.step{display:grid;grid-template-columns:2rem 1fr;gap:.75rem;align-items:start;padding:1rem 0;border-bottom:1px solid var(--border)}
+.step:last-child{border-bottom:none}
+.step-num{width:2rem;height:2rem;background:var(--accent);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'DM Mono',monospace;font-size:.8rem;font-weight:500;flex-shrink:0;margin-top:.1rem}
+.step-reason{font-size:.84rem;color:var(--muted);margin-top:.25rem}
+.step-math{margin-top:.3rem}
+.reveal-btn{display:block;width:100%;padding:1rem;background:var(--paper2);border:none;border-top:1px solid var(--border);font-family:'DM Sans',sans-serif;font-size:.88rem;font-weight:500;color:var(--muted);cursor:pointer;text-align:center;transition:background .12s,color .12s}
+.reveal-btn:hover{background:var(--paper3);color:var(--ink)}
+.steps-hidden{display:none}
+
+/* PROOF */
+.proof-block{background:var(--accent2-light);border-left:4px solid var(--accent2);border-radius:0 var(--radius) var(--radius) 0;padding:1.5rem;margin:1.5rem 0}
+.proof-block .proof-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent2);margin-bottom:.75rem}
+.proof-step{display:flex;align-items:baseline;gap:.75rem;margin:.6rem 0;font-size:.95rem}
+.proof-step .ps-num{font-family:'DM Mono',monospace;font-size:.72rem;color:var(--accent2);min-width:1.5rem}
+
+/* INTERACTIVE */
+.interactive-wrap{background:var(--paper2);border:1px solid var(--border);border-radius:var(--radius);padding:2rem;margin:1.5rem 0}
+.fn-selector{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.5rem}
+.fn-btn{padding:.5rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--paper);font-family:'DM Mono',monospace;font-size:.85rem;cursor:pointer;transition:all .15s;color:var(--ink)}
+.fn-btn:hover{border-color:var(--accent);color:var(--accent)}
+.fn-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.fn-display{background:var(--ink);color:var(--paper);border-radius:10px;padding:1.25rem 1.5rem;margin:1rem 0;min-height:4rem;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;text-align:center}
+.fn-display .fn-line{font-size:1rem}
+.fn-display .fn-line.result{font-size:1.1rem;opacity:.75}
+canvas#chainCanvas{width:100%;height:260px;border-radius:8px;background:#fff;border:1px solid var(--border);display:block;margin-top:1rem}
+
+/* SLIDER */
+.slider-row{display:flex;align-items:center;gap:1rem;margin-bottom:.75rem;flex-wrap:wrap}
+.slider-row label{font-size:.85rem;font-family:'DM Mono',monospace;color:var(--muted);min-width:80px}
+.slider-row input[type=range]{flex:1;min-width:120px;accent-color:var(--accent)}
+.slider-val{font-family:'DM Mono',monospace;font-size:.95rem;font-weight:500;min-width:2.5rem;text-align:right}
+
+/* COMMON MISTAKES */
+.mistake-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1rem;margin:1.5rem 0}
+.mistake-card{border-radius:var(--radius);padding:1.25rem;border:1px solid}
+.mistake-card.wrong-card{background:var(--red-light);border-color:#fca5a5}
+.mistake-card.right-card{background:var(--green-light);border-color:#86efac}
+.mistake-card .mc-label{font-family:'DM Mono',monospace;font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;margin-bottom:.6rem}
+.mistake-card.wrong-card .mc-label{color:var(--red)}
+.mistake-card.right-card .mc-label{color:var(--green)}
+
+/* TABLE */
+table.ext-table{width:100%;border-collapse:collapse;margin:1rem 0;font-size:.9rem}
+table.ext-table th{background:var(--ink);color:var(--paper);padding:.65rem 1rem;text-align:left;font-weight:500}
+table.ext-table td{padding:.6rem 1rem;border-bottom:1px solid var(--border);vertical-align:middle}
+table.ext-table tr:last-child td{border-bottom:none}
+table.ext-table tr:nth-child(even) td{background:var(--paper2)}
+
+/* PRACTICE */
+.quiz-card{border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;margin:1rem 0;transition:border-color .2s,background .2s}
+.quiz-card.correct{border-color:var(--green);background:var(--green-light)}
+.quiz-card.wrong{border-color:var(--red);background:var(--red-light)}
+.quiz-q{font-size:1rem;font-weight:500;margin-bottom:.6rem}
+.quiz-hint{font-size:.78rem;color:var(--muted);margin-bottom:.85rem;font-style:italic}
+.quiz-input-row{display:flex;gap:.75rem;align-items:center;flex-wrap:wrap}
+.quiz-input{font-family:'DM Mono',monospace;font-size:.95rem;padding:.6rem 1rem;border:1.5px solid var(--border);border-radius:8px;background:var(--paper);color:var(--ink);outline:none;width:260px;transition:border-color .15s}
+.quiz-input:focus{border-color:var(--accent)}
+.check-btn{padding:.6rem 1.25rem;background:var(--ink);color:var(--paper);border:none;border-radius:8px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:.9rem;cursor:pointer;transition:background .12s;flex-shrink:0}
+.check-btn:hover{background:#1e3a5f}
+.quiz-feedback{margin-top:.75rem;font-size:.9rem;padding:.65rem 1rem;border-radius:8px;display:none;line-height:1.5}
+.quiz-feedback.show{display:block}
+.quiz-feedback.correct-fb{background:var(--green-light);color:var(--green);border:1px solid #86efac}
+.quiz-feedback.wrong-fb{background:var(--red-light);color:var(--red);border:1px solid #fca5a5}
+
+/* SCORE */
+.score-bar{background:var(--paper2);border:1px solid var(--border);border-radius:var(--radius);padding:1.5rem;text-align:center;margin:1.5rem 0}
+.score-num{font-family:'Playfair Display',serif;font-size:3rem;font-weight:900;color:var(--accent)}
+.score-label{font-size:.88rem;color:var(--muted);margin-top:.25rem}
+.progress-dots{display:flex;gap:.4rem;justify-content:center;margin-top:.75rem}
+.dot{width:10px;height:10px;border-radius:50%;background:var(--border);transition:background .2s}
+.dot.done{background:var(--green)}
+.dot.miss{background:var(--red)}
+
+/* FOOTER */
+footer{background:var(--ink);color:rgba(247,248,252,.5);text-align:center;padding:3rem 2rem;font-size:.82rem;font-family:'DM Mono',monospace;letter-spacing:.04em}
+footer strong{color:var(--paper)}
+
+.hint{font-size:.82rem;color:var(--muted);font-style:italic}
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:.5rem 0}
+code.inline{background:var(--paper2);padding:.1rem .45rem;border-radius:4px;font-family:'DM Mono',monospace;font-size:.88rem}
+
+@media(max-width:600px){
+  section{padding:3.5rem 1.25rem}
+  .hero{padding:2.5rem 1.5rem}
+  .hero h1{font-size:3rem}
+  nav{padding:.5rem 1rem}
+  nav a{font-size:.76rem;padding:.35rem .65rem}
+  .formula-card{padding:1.5rem}
+  .steps-container{padding:0 1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════ HERO -->
+<header class="hero">
+  <div class="hero-dots"></div>
+  <div class="hero-glow"></div>
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center">
+    <div class="hero-tag">AP Calculus AB · Differentiation</div>
+    <h1>The <em>Chain</em><br>Rule</h1>
+    <p class="hero-formula">\(\dfrac{d}{dx}[f(g(x))] = f'(g(x))\cdot g'(x)\)</p>
+    <p class="hero-sub">How to differentiate a function inside another function.</p>
+    <p class="hero-obj">Learning objective: After using this, you should be able to identify composite functions, correctly apply the Chain Rule to differentiate them, and combine it with other rules like the Product and Quotient Rules.</p>
+    <p class="hero-byline">Built by [Your Name] &nbsp;·&nbsp; AP Calculus AB Final Project</p>
+    <a href="#concept" class="scroll-cta">Start learning ↓</a>
+  </div>
+</header>
+
+<!-- ══════════════════════════ NAV -->
+<nav id="mainNav">
+  <a href="#concept" class="nav-link">The Rule</a>
+  <a href="#proof" class="nav-link">Why It Works</a>
+  <a href="#examples" class="nav-link">Examples</a>
+  <a href="#mistakes" class="nav-link">Common Mistakes</a>
+  <a href="#interactive" class="nav-link">Explore</a>
+  <a href="#practice" class="nav-link">Practice</a>
+</nav>
+
+<!-- ══════════════════════════ CONCEPT -->
+<section id="concept">
+  <p class="section-label">01 · The Rule</p>
+  <h2 class="section-title">What is the Chain Rule?</h2>
+
+  <p>Every differentiation rule you've learned so far (Power Rule, Product Rule, Quotient Rule) handles functions built from basic pieces. But what about a function like \(\sin(x^2)\) or \((3x+1)^{10}\)? These are <strong>composite functions</strong>: one function plugged inside another. The Chain Rule is the tool that handles them.</p>
+
+  <div class="formula-card">
+    <div class="formula-label top">The Chain Rule</div>
+    \[\frac{d}{dx}\!\left[f(g(x))\right] = f'(g(x))\cdot g'(x)\]
+    <div class="formula-label" style="margin-top:.9rem">Differentiate the outside (leaving the inside alone), then multiply by the derivative of the inside.</div>
+  </div>
+
+  <p>In plain English: <strong>derivative of the outside × derivative of the inside.</strong> The inside function is never touched when you differentiate the outside.</p>
+
+  <div class="analogy">
+    <div class="analogy-label">🧅 The Onion Analogy</div>
+    <p style="margin:0">Think of a composite function as an onion. The Chain Rule says: <em>peel one layer at a time, and multiply the results together.</em> Each layer you peel gives you one factor in your answer. The key is recognizing how many layers exist before you start.</p>
+  </div>
+
+  <h3 class="sub-title">Step 1: Identify the layers</h3>
+  <p>Before differentiating, ask yourself: "what is the outermost operation, and what is plugged into it?" Name them \(f\) (outer) and \(g\) (inner).</p>
+
+  <div class="decomp">
+    <div class="decomp-part">
+      <div class="dp-label">Outer function \(f\)</div>
+      <div class="dp-box outer">Apply to the whole inside</div>
+    </div>
+    <div class="decomp-arrow">∘</div>
+    <div class="decomp-part">
+      <div class="dp-label">Inner function \(g\)</div>
+      <div class="dp-box inner">What's plugged in</div>
+    </div>
+  </div>
+
+  <p>For example, in \(\sin(x^2)\): the outer function is \(\sin(\square)\) and the inner function is \(x^2\). In \((3x+1)^{10}\): the outer is \((\square)^{10}\) and the inner is \(3x+1\).</p>
+
+  <h3 class="sub-title">Step 2: Apply the formula</h3>
+  <div class="concept-grid">
+    <div class="concept-card">
+      <div class="cc-label">Differentiate outer</div>
+      <p>Take the derivative of \(f\), but keep \(g(x)\) plugged in exactly as-is.</p>
+      <div class="cc-note">\(\sin(x^2) \to \cos(x^2)\), and the \(x^2\) stays.</div>
+    </div>
+    <div class="concept-card">
+      <div class="cc-label">Multiply by inner's derivative</div>
+      <p>Multiply by \(g'(x)\), the derivative of what was inside.</p>
+      <div class="cc-note">\(\cos(x^2) \cdot \dfrac{d}{dx}[x^2] = \cos(x^2)\cdot 2x\)</div>
+    </div>
+  </div>
+
+  <h3 class="sub-title">Leibniz notation form</h3>
+  <p>If you write \(y = f(u)\) where \(u = g(x)\), the Chain Rule looks like:</p>
+  <div class="formula-card" style="padding:1.75rem">
+    \[\frac{dy}{dx} = \frac{dy}{du}\cdot\frac{du}{dx}\]
+    <div class="formula-label" style="margin-top:.75rem">The \(du\)'s "cancel" (informally), which is a useful memory device</div>
+  </div>
+  <p>Both forms say the same thing. The Leibniz form makes it visually clear why you multiply: the rates chain together.</p>
+
+  <h3 class="sub-title">Common outer functions to know</h3>
+  <table class="ext-table">
+    <thead><tr><th>Outer function \(f(u)\)</th><th>\(f'(u)\)</th><th>Chain Rule result for \(f(g(x))\)</th></tr></thead>
+    <tbody>
+      <tr><td>\(u^n\)</td><td>\(nu^{n-1}\)</td><td>\(n[g(x)]^{n-1}\cdot g'(x)\)</td></tr>
+      <tr><td>\(\sin u\)</td><td>\(\cos u\)</td><td>\(\cos(g(x))\cdot g'(x)\)</td></tr>
+      <tr><td>\(\cos u\)</td><td>\(-\sin u\)</td><td>\(-\sin(g(x))\cdot g'(x)\)</td></tr>
+      <tr><td>\(\tan u\)</td><td>\(\sec^2 u\)</td><td>\(\sec^2(g(x))\cdot g'(x)\)</td></tr>
+      <tr><td>\(e^u\)</td><td>\(e^u\)</td><td>\(e^{g(x)}\cdot g'(x)\)</td></tr>
+      <tr><td>\(\ln u\)</td><td>\(1/u\)</td><td>\(\dfrac{1}{g(x)}\cdot g'(x) = \dfrac{g'(x)}{g(x)}\)</td></tr>
+      <tr><td>\(\sqrt{u}\)</td><td>\(\dfrac{1}{2\sqrt{u}}\)</td><td>\(\dfrac{g'(x)}{2\sqrt{g(x)}}\)</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════ PROOF -->
+<section id="proof">
+  <p class="section-label">02 · Why It Works</p>
+  <h2 class="section-title">Deriving the Chain Rule</h2>
+
+  <p>The Chain Rule follows from the limit definition of the derivative. Here is the intuitive derivation using the Leibniz form.</p>
+
+  <div class="proof-block">
+    <div class="proof-label">Proof sketch via limits</div>
+    <div class="proof-step"><span class="ps-num">1.</span><span>We want \(\dfrac{dy}{dx}\) where \(y=f(u)\) and \(u=g(x)\). By the limit definition: \[\frac{dy}{dx}=\lim_{\Delta x\to 0}\frac{\Delta y}{\Delta x}\]</span></div>
+    <div class="proof-step"><span class="ps-num">2.</span><span>Assuming \(\Delta u\neq 0\), multiply and divide by \(\Delta u\): \[\frac{\Delta y}{\Delta x}=\frac{\Delta y}{\Delta u}\cdot\frac{\Delta u}{\Delta x}\]</span></div>
+    <div class="proof-step"><span class="ps-num">3.</span><span>Take the limit as \(\Delta x\to 0\). Since \(g\) is differentiable (hence continuous), \(\Delta u\to 0\) as well: \[\lim_{\Delta x\to 0}\frac{\Delta y}{\Delta u}=\frac{dy}{du}=f'(u)\]</span></div>
+    <div class="proof-step"><span class="ps-num">4.</span><span>And simultaneously: \[\lim_{\Delta x\to 0}\frac{\Delta u}{\Delta x}=\frac{du}{dx}=g'(x)\]</span></div>
+    <div class="proof-step"><span class="ps-num">5.</span><span>Combining: \[\boxed{\frac{dy}{dx}=f'(g(x))\cdot g'(x)}\]</span></div>
+  </div>
+
+  <p class="hint">Note: the full rigorous proof requires handling the edge case where \(\Delta u = 0\) in a neighborhood around the point, which is done cleanly via a small reformulation. The above captures the essential logic.</p>
+
+  <h3 class="sub-title">Why the inside is left unchanged</h3>
+  <p>When you differentiate \(f\) (the outer function), you're computing the rate at which the output of \(f\) changes per unit change in its input. And its input is \(g(x)\), not \(x\). So \(g(x)\) stays inside \(f'\) exactly as-is. Then multiplying by \(g'(x)\) converts "per unit \(g\)" into "per unit \(x\)".</p>
+</section>
+
+<!-- ══════════════════════════ EXAMPLES -->
+<section id="examples">
+  <p class="section-label">03 · Worked Examples</p>
+  <h2 class="section-title">Step-by-step solutions</h2>
+  <p>Click <strong>Show steps</strong> to walk through each solution.</p>
+
+  <!-- EX 1 -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-num">Example 01</span>
+      <span class="example-question">Differentiate \(y=(3x^2+1)^5\)</span>
+    </div>
+    <button class="reveal-btn" onclick="toggleSteps(this)">Show steps ↓</button>
+    <div class="steps-hidden steps-container">
+      <div class="step"><div class="step-num">1</div><div>
+        <div>Identify the layers.</div>
+        <div class="step-reason">Outer: \(f(u)=u^5\). &nbsp; Inner: \(g(x)=3x^2+1\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div>
+        <div>Differentiate the outer, leaving the inner untouched.</div>
+        <div class="step-math">\(f'(u)=5u^4 \implies 5(3x^2+1)^4\)</div>
+        <div class="step-reason">The Power Rule applies to the outer, so the \(3x^2+1\) stays inside.</div>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div>
+        <div>Differentiate the inner function.</div>
+        <div class="step-math">\(g'(x)=\dfrac{d}{dx}[3x^2+1]=6x\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div>
+        <div>Multiply: outer derivative × inner derivative.</div>
+        <div class="step-math">\(\dfrac{dy}{dx}=5(3x^2+1)^4\cdot 6x=30x(3x^2+1)^4\)</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- EX 2 -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-num">Example 02</span>
+      <span class="example-question">Differentiate \(y=\sin(4x^3)\)</span>
+    </div>
+    <button class="reveal-btn" onclick="toggleSteps(this)">Show steps ↓</button>
+    <div class="steps-hidden steps-container">
+      <div class="step"><div class="step-num">1</div><div>
+        <div>Identify the layers.</div>
+        <div class="step-reason">Outer: \(f(u)=\sin u\). &nbsp; Inner: \(g(x)=4x^3\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div>
+        <div>Differentiate the outer (the derivative of \(\sin\) is \(\cos\)), keeping the inside in place.</div>
+        <div class="step-math">\(f'(g(x))=\cos(4x^3)\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div>
+        <div>Differentiate the inner.</div>
+        <div class="step-math">\(g'(x)=12x^2\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div>
+        <div>Multiply.</div>
+        <div class="step-math">\(\dfrac{dy}{dx}=\cos(4x^3)\cdot 12x^2=12x^2\cos(4x^3)\)</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- EX 3 -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-num">Example 03</span>
+      <span class="example-question">Differentiate \(y=e^{x^2-3x}\)</span>
+    </div>
+    <button class="reveal-btn" onclick="toggleSteps(this)">Show steps ↓</button>
+    <div class="steps-hidden steps-container">
+      <div class="step"><div class="step-num">1</div><div>
+        <div>Identify the layers.</div>
+        <div class="step-reason">Outer: \(f(u)=e^u\). &nbsp; Inner: \(g(x)=x^2-3x\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div>
+        <div>The derivative of \(e^u\) is \(e^u\), which means it's its own derivative. Keep the inside in place.</div>
+        <div class="step-math">\(f'(g(x))=e^{x^2-3x}\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div>
+        <div>Differentiate the inner.</div>
+        <div class="step-math">\(g'(x)=2x-3\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div>
+        <div>Multiply.</div>
+        <div class="step-math">\(\dfrac{dy}{dx}=e^{x^2-3x}\cdot(2x-3)=(2x-3)e^{x^2-3x}\)</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- EX 4 — Chain + Product -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-num">Example 04</span>
+      <span class="example-question">Differentiate \(y=x^2\sin(5x)\) &nbsp;<span style="opacity:.55;font-size:.85rem">(Chain Rule + Product Rule)</span></span>
+    </div>
+    <button class="reveal-btn" onclick="toggleSteps(this)">Show steps ↓</button>
+    <div class="steps-hidden steps-container">
+      <div class="step"><div class="step-num">1</div><div>
+        <div>Recognize this as a product: \(x^2\) times \(\sin(5x)\). Apply the Product Rule first.</div>
+        <div class="step-math">\(\dfrac{d}{dx}[uv]=u'v+uv'\)</div>
+        <div class="step-reason">\(u=x^2,\quad v=\sin(5x)\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div>
+        <div>Differentiate \(u=x^2\).</div>
+        <div class="step-math">\(u'=2x\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div>
+        <div>Differentiate \(v=\sin(5x)\) using the Chain Rule.</div>
+        <div class="step-math">\(v'=\cos(5x)\cdot 5=5\cos(5x)\)</div>
+        <div class="step-reason">Outer: \(\sin\), inner: \(5x\), inner derivative: \(5\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div>
+        <div>Assemble with the Product Rule formula.</div>
+        <div class="step-math">\(\dfrac{dy}{dx}=2x\cdot\sin(5x)+x^2\cdot 5\cos(5x)\)</div>
+        <div class="step-math">\(=2x\sin(5x)+5x^2\cos(5x)\)</div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- EX 5 — Triple chain -->
+  <div class="example-block">
+    <div class="example-header">
+      <span class="example-num">Example 05</span>
+      <span class="example-question">Differentiate \(y=\cos^3(2x)\) &nbsp;<span style="opacity:.55;font-size:.85rem">(three layers)</span></span>
+    </div>
+    <button class="reveal-btn" onclick="toggleSteps(this)">Show steps ↓</button>
+    <div class="steps-hidden steps-container">
+      <div class="step"><div class="step-num">1</div><div>
+        <div>Rewrite to see the layers clearly: \(y=[\cos(2x)]^3\).</div>
+        <div class="step-reason">Three layers: outermost \((\square)^3\), then \(\cos(\square)\), then \(2x\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div>
+        <div>Differentiate the outermost layer (Power Rule on the whole cosine expression).</div>
+        <div class="step-math">\(3[\cos(2x)]^2\)</div>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div>
+        <div>Multiply by the derivative of the next layer: \(\dfrac{d}{dx}[\cos(2x)]\).</div>
+        <div class="step-math">\(\dfrac{d}{dx}[\cos(2x)]=-\sin(2x)\cdot 2=-2\sin(2x)\)</div>
+        <div class="step-reason">Chain Rule again: derivative of \(\cos\) is \(-\sin\), times the derivative of \(2x\) which is \(2\).</div>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div>
+        <div>Combine all layers.</div>
+        <div class="step-math">\(\dfrac{dy}{dx}=3[\cos(2x)]^2\cdot(-2\sin(2x))=-6\sin(2x)\cos^2(2x)\)</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ MISTAKES -->
+<section id="mistakes">
+  <p class="section-label">04 · Common Mistakes</p>
+  <h2 class="section-title">What trips people up</h2>
+
+  <p>These are the errors that show up most often on AP exams. Read each one carefully.</p>
+
+  <div class="mistake-grid">
+    <div class="mistake-card wrong-card">
+      <div class="mc-label">✗ Forgetting the inner derivative</div>
+      <p>\(\dfrac{d}{dx}[\sin(x^2)] = \cos(x^2)\)</p>
+      <p style="font-size:.85rem;margin:0">Stopped after differentiating the outer. Missing the \(\cdot 2x\).</p>
+    </div>
+    <div class="mistake-card right-card">
+      <div class="mc-label">✓ Correct</div>
+      <p>\(\dfrac{d}{dx}[\sin(x^2)] = \cos(x^2)\cdot 2x\)</p>
+      <p style="font-size:.85rem;margin:0">Always multiply by \(g'(x)\). Don't stop after the outer derivative.</p>
+    </div>
+  </div>
+
+  <div class="mistake-grid">
+    <div class="mistake-card wrong-card">
+      <div class="mc-label">✗ Changing the inside</div>
+      <p>\(\dfrac{d}{dx}[(x^3+1)^4]=4(3x^2)^3\)</p>
+      <p style="font-size:.85rem;margin:0">Differentiated the inside <em>inside</em> the outer. The inside must stay as-is when you differentiate the outer.</p>
+    </div>
+    <div class="mistake-card right-card">
+      <div class="mc-label">✓ Correct</div>
+      <p>\(\dfrac{d}{dx}[(x^3+1)^4]=4(x^3+1)^3\cdot 3x^2\)</p>
+      <p style="font-size:.85rem;margin:0">Keep \((x^3+1)\) intact in the outer derivative. Then multiply by \(3x^2\) separately.</p>
+    </div>
+  </div>
+
+  <div class="mistake-grid">
+    <div class="mistake-card wrong-card">
+      <div class="mc-label">✗ Applying chain rule to a simple power</div>
+      <p>\(\dfrac{d}{dx}[x^5]=5x^4\cdot 1\cdot\text{"chain rule"}\)</p>
+      <p style="font-size:.85rem;margin:0">The inner function is just \(x\), whose derivative is 1. The Chain Rule still applies, it just does nothing extra here.</p>
+    </div>
+    <div class="mistake-card right-card">
+      <div class="mc-label">✓ Understand why it's trivial</div>
+      <p>\(\dfrac{d}{dx}[x^5]=5x^4\cdot\underbrace{\dfrac{d}{dx}[x]}_{=1}=5x^4\)</p>
+      <p style="font-size:.85rem;margin:0">The Chain Rule is always happening. When the inside is just \(x\), it contributes a factor of 1 and disappears.</p>
+    </div>
+  </div>
+
+  <div class="mistake-grid">
+    <div class="mistake-card wrong-card">
+      <div class="mc-label">✗ Forgetting Chain Rule with \(e^{f(x)}\)</div>
+      <p>\(\dfrac{d}{dx}[e^{3x^2}]=e^{3x^2}\)</p>
+      <p style="font-size:.85rem;margin:0">Yes, \(e^u\) differentiates to itself, but you still need \(\cdot g'(x)\).</p>
+    </div>
+    <div class="mistake-card right-card">
+      <div class="mc-label">✓ Correct</div>
+      <p>\(\dfrac{d}{dx}[e^{3x^2}]=e^{3x^2}\cdot 6x\)</p>
+      <p style="font-size:.85rem;margin:0">The outer \(e^u\) stays as \(e^{3x^2}\), multiplied by the inner derivative \(6x\).</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════ INTERACTIVE -->
+<section id="interactive">
+  <p class="section-label">05 · Interactive Explorer</p>
+  <h2 class="section-title">See the Chain Rule in action</h2>
+  <p>Pick a composite function. The app identifies the layers, applies the Chain Rule step by step, and graphs both \(f(g(x))\) and its derivative.</p>
+
+  <div class="interactive-wrap">
+    <div style="margin-bottom:.75rem;font-size:.88rem;color:var(--muted);font-family:'DM Mono',monospace;letter-spacing:.05em">CHOOSE A FUNCTION</div>
+    <div class="fn-selector" id="fnSelector">
+      <button class="fn-btn active" data-idx="0">(x²+1)⁴</button>
+      <button class="fn-btn" data-idx="1">sin(3x)</button>
+      <button class="fn-btn" data-idx="2">cos(x²)</button>
+      <button class="fn-btn" data-idx="3">e^(2x)</button>
+      <button class="fn-btn" data-idx="4">√(x²+4)</button>
+      <button class="fn-btn" data-idx="5">ln(x²+1)</button>
+    </div>
+
+    <div class="fn-display" id="fnDisplay">
+      <div class="fn-line" id="fnLine1"></div>
+      <div class="fn-line" id="fnLine2" style="opacity:.55;font-size:.9rem"></div>
+      <div class="fn-line result" id="fnLine3"></div>
+    </div>
+
+    <canvas id="chainCanvas" width="800" height="260"></canvas>
+    <p class="hint" style="margin-top:.6rem">Solid purple = \(f(g(x))\). Dashed teal = derivative. Domain: \(x\in[-3,3]\).</p>
+  </div>
+</section>
+
+<!-- ══════════════════════════ PRACTICE -->
+<section id="practice">
+  <p class="section-label">06 · Practice Problems</p>
+  <h2 class="section-title">Test yourself</h2>
+  <p>Enter your answer in simplified form. Hit <strong>Check</strong> or press Enter. If you're wrong, the full solution is shown.</p>
+
+  <div class="score-bar">
+    <div class="score-num" id="scoreNum">0 / 5</div>
+    <div class="score-label">correct answers</div>
+    <div class="progress-dots">
+      <div class="dot" id="dot0"></div>
+      <div class="dot" id="dot1"></div>
+      <div class="dot" id="dot2"></div>
+      <div class="dot" id="dot3"></div>
+      <div class="dot" id="dot4"></div>
+    </div>
+  </div>
+
+  <!-- Q1 -->
+  <div class="quiz-card" id="qcard0">
+    <div class="quiz-q">1. Find \(f'(x)\) if \(f(x)=(2x+3)^4\)</div>
+    <div class="quiz-hint">Identify outer = \((\square)^4\), inner = \(2x+3\). Inner derivative = ?</div>
+    <div class="quiz-input-row">
+      <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--muted)">\(f'(x)=\)</span>
+      <input class="quiz-input" id="q0" placeholder="e.g. 8(2x+3)^3" autocomplete="off"/>
+      <button class="check-btn" onclick="checkAnswer(0)">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fb0"></div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="quiz-card" id="qcard1">
+    <div class="quiz-q">2. Differentiate \(g(x)=\cos(5x^2)\)</div>
+    <div class="quiz-hint">Outer = \(\cos(\square)\), inner = \(5x^2\).</div>
+    <div class="quiz-input-row">
+      <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--muted)">\(g'(x)=\)</span>
+      <input class="quiz-input" id="q1" placeholder="e.g. -sin(5x^2)·10x" autocomplete="off"/>
+      <button class="check-btn" onclick="checkAnswer(1)">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fb1"></div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="quiz-card" id="qcard2">
+    <div class="quiz-q">3. Find \(\dfrac{d}{dx}\!\left[e^{3x-1}\right]\)</div>
+    <div class="quiz-hint">Outer = \(e^{\square}\), inner = \(3x-1\). Remember: \(\frac{d}{du}[e^u]=e^u\).</div>
+    <div class="quiz-input-row">
+      <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--muted)">\(=\)</span>
+      <input class="quiz-input" id="q2" placeholder="e.g. 3e^(3x-1)" autocomplete="off"/>
+      <button class="check-btn" onclick="checkAnswer(2)">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fb2"></div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="quiz-card" id="qcard3">
+    <div class="quiz-q">4. Differentiate \(h(x)=\sqrt{9-x^2}\)</div>
+    <div class="quiz-hint">Rewrite as \((9-x^2)^{1/2}\). Outer = \((\square)^{1/2}\), inner = \(9-x^2\).</div>
+    <div class="quiz-input-row">
+      <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--muted)">\(h'(x)=\)</span>
+      <input class="quiz-input" id="q3" placeholder="e.g. -x/sqrt(9-x^2)" autocomplete="off"/>
+      <button class="check-btn" onclick="checkAnswer(3)">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fb3"></div>
+  </div>
+
+  <!-- Q5 -->
+  <div class="quiz-card" id="qcard4">
+    <div class="quiz-q">5. Find the slope of the tangent line to \(y=\sin^2(x)\) at \(x=\dfrac{\pi}{4}\)</div>
+    <div class="quiz-hint">First find \(y'\) using the Chain Rule, then evaluate at \(x=\pi/4\). Recall \(\sin(\pi/4)=\cos(\pi/4)=\frac{\sqrt{2}}{2}\).</div>
+    <div class="quiz-input-row">
+      <span style="font-family:'DM Mono',monospace;font-size:.9rem;color:var(--muted)">slope \(=\)</span>
+      <input class="quiz-input" id="q4" placeholder="Exact value" style="width:160px" autocomplete="off"/>
+      <button class="check-btn" onclick="checkAnswer(4)">Check</button>
+    </div>
+    <div class="quiz-feedback" id="fb4"></div>
+  </div>
+
+</section>
+
+<footer>
+  <strong>The Chain Rule</strong> &nbsp;·&nbsp; AP Calculus AB Final Project<br>
+  <span style="display:block;margin-top:.4rem">Built with AI assistance &nbsp;·&nbsp; All mathematics independently verified</span>
+</footer>
+
+<script>
+// ── STEP REVEAL ──
+function toggleSteps(btn) {
+  const hidden = btn.nextElementSibling;
+  const open = hidden.style.display === 'block';
+  hidden.style.display = open ? 'none' : 'block';
+  btn.textContent = open ? 'Show steps ↓' : 'Hide steps ↑';
+  if (!open && window.renderMathInElement) setTimeout(() => renderMathInElement(hidden), 30);
+}
+
+// ── INTERACTIVE EXPLORER ──
+const functions = [
+  {
+    label: '(x²+1)⁴',
+    latex_f: '(x^2+1)^4',
+    outer: 'f(u)=u^4',
+    inner: 'g(x)=x^2+1,\\quad g\'(x)=2x',
+    deriv_latex: "f'(x)=4(x^2+1)^3\\cdot 2x=8x(x^2+1)^3",
+    f: x => Math.pow(x*x+1, 4),
+    df: x => 8*x*Math.pow(x*x+1, 3)
+  },
+  {
+    label: 'sin(3x)',
+    latex_f: '\\sin(3x)',
+    outer: 'f(u)=\\sin u',
+    inner: 'g(x)=3x,\\quad g\'(x)=3',
+    deriv_latex: "f'(x)=\\cos(3x)\\cdot 3=3\\cos(3x)",
+    f: x => Math.sin(3*x),
+    df: x => 3*Math.cos(3*x)
+  },
+  {
+    label: 'cos(x²)',
+    latex_f: '\\cos(x^2)',
+    outer: 'f(u)=\\cos u',
+    inner: 'g(x)=x^2,\\quad g\'(x)=2x',
+    deriv_latex: "f'(x)=-\\sin(x^2)\\cdot 2x=-2x\\sin(x^2)",
+    f: x => Math.cos(x*x),
+    df: x => -2*x*Math.sin(x*x)
+  },
+  {
+    label: 'e^(2x)',
+    latex_f: 'e^{2x}',
+    outer: 'f(u)=e^u',
+    inner: 'g(x)=2x,\\quad g\'(x)=2',
+    deriv_latex: "f'(x)=e^{2x}\\cdot 2=2e^{2x}",
+    f: x => Math.exp(2*x),
+    df: x => 2*Math.exp(2*x)
+  },
+  {
+    label: '√(x²+4)',
+    latex_f: '\\sqrt{x^2+4}',
+    outer: 'f(u)=\\sqrt{u}=u^{1/2}',
+    inner: 'g(x)=x^2+4,\\quad g\'(x)=2x',
+    deriv_latex: "f'(x)=\\dfrac{1}{2\\sqrt{x^2+4}}\\cdot 2x=\\dfrac{x}{\\sqrt{x^2+4}}",
+    f: x => Math.sqrt(x*x+4),
+    df: x => x/Math.sqrt(x*x+4)
+  },
+  {
+    label: 'ln(x²+1)',
+    latex_f: '\\ln(x^2+1)',
+    outer: 'f(u)=\\ln u',
+    inner: 'g(x)=x^2+1,\\quad g\'(x)=2x',
+    deriv_latex: "f'(x)=\\dfrac{1}{x^2+1}\\cdot 2x=\\dfrac{2x}{x^2+1}",
+    f: x => Math.log(x*x+1),
+    df: x => 2*x/(x*x+1)
+  }
+];
+
+let currentFn = 0;
+
+function setFn(idx) {
+  currentFn = idx;
+  document.querySelectorAll('.fn-btn').forEach((b,i) => b.classList.toggle('active', i===idx));
+  const fn = functions[idx];
+  const l1 = document.getElementById('fnLine1');
+  const l2 = document.getElementById('fnLine2');
+  const l3 = document.getElementById('fnLine3');
+  l1.innerHTML = `\\(f(x) = ${fn.latex_f}\\qquad\\text{Outer: }${fn.outer}\\)`;
+  l2.innerHTML = `\\(\\text{Inner: }${fn.inner}\\)`;
+  l3.innerHTML = `\\(${fn.deriv_latex}\\)`;
+  if (window.renderMathInElement) {
+    renderMathInElement(document.getElementById('fnDisplay'));
+  }
+  drawChain(idx);
+}
+
+document.getElementById('fnSelector').addEventListener('click', e => {
+  if (e.target.classList.contains('fn-btn')) setFn(parseInt(e.target.dataset.idx));
+});
+
+const canvas = document.getElementById('chainCanvas');
+const ctx = canvas.getContext('2d');
+
+function drawChain(idx) {
+  const fn = functions[idx];
+  const dpr = window.devicePixelRatio || 1;
+  const cssW = canvas.offsetWidth;
+  const cssH = 260;
+  canvas.width = cssW * dpr;
+  canvas.height = cssH * dpr;
+  ctx.scale(dpr, dpr);
+  const W = cssW, H = cssH;
+  const xMin = -3, xMax = 3;
+
+  // Auto-scale y
+  let yVals = [], dVals = [];
+  for (let i = 0; i <= 400; i++) {
+    const x = xMin + i*(xMax-xMin)/400;
+    const y = fn.f(x), d = fn.df(x);
+    if (isFinite(y)) yVals.push(y);
+    if (isFinite(d)) dVals.push(d);
+  }
+  const allVals = [...yVals, ...dVals].filter(isFinite);
+  let yMin = Math.max(-15, Math.min(...allVals) * 1.15);
+  let yMax = Math.min(15, Math.max(...allVals) * 1.15);
+  if (yMin >= yMax) { yMin = -5; yMax = 5; }
+
+  const toX = x => (x-xMin)/(xMax-xMin)*W;
+  const toY = y => { const c = Math.max(yMin,Math.min(yMax,y)); return (1-(c-yMin)/(yMax-yMin))*H; };
+
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle = '#dbeafe'; ctx.lineWidth = 1;
+  for (let gx=xMin;gx<=xMax;gx++) { ctx.beginPath();ctx.moveTo(toX(gx),0);ctx.lineTo(toX(gx),H);ctx.stroke(); }
+  const yStep = (yMax-yMin) > 10 ? 5 : 2;
+  for (let gy=Math.ceil(yMin/yStep)*yStep; gy<=yMax; gy+=yStep) {
+    ctx.beginPath();ctx.moveTo(0,toY(gy));ctx.lineTo(W,toY(gy));ctx.stroke();
+  }
+
+  // Axes
+  ctx.strokeStyle = '#93c5fd'; ctx.lineWidth = 1.5;
+  if (yMin<=0&&yMax>=0) { ctx.beginPath();ctx.moveTo(0,toY(0));ctx.lineTo(W,toY(0));ctx.stroke(); }
+  ctx.beginPath();ctx.moveTo(toX(0),0);ctx.lineTo(toX(0),H);ctx.stroke();
+
+  // f(x)
+  ctx.strokeStyle='#0284c7';ctx.lineWidth=2.5;ctx.setLineDash([]);
+  ctx.beginPath();let pen=false;
+  for(let i=0;i<=600;i++){
+    const x=xMin+i*(xMax-xMin)/600;
+    const y=fn.f(x);
+    if(!isFinite(y)){pen=false;continue;}
+    if(!pen){ctx.moveTo(toX(x),toY(y));pen=true;}else ctx.lineTo(toX(x),toY(y));
+  }ctx.stroke();
+
+  // f'(x)
+  ctx.strokeStyle='#0ea5e9';ctx.lineWidth=2.5;ctx.setLineDash([8,4]);
+  ctx.beginPath();pen=false;
+  for(let i=0;i<=600;i++){
+    const x=xMin+i*(xMax-xMin)/600;
+    const y=fn.df(x);
+    if(!isFinite(y)){pen=false;continue;}
+    if(!pen){ctx.moveTo(toX(x),toY(y));pen=true;}else ctx.lineTo(toX(x),toY(y));
+  }ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Legend
+  ctx.font='12px DM Sans, sans-serif';ctx.textAlign='left';
+  ctx.fillStyle='#0284c7';ctx.fillRect(14,14,22,3);ctx.fillText('f(x)',42,19);
+  ctx.fillStyle='#0ea5e9';ctx.fillRect(14,30,22,3);ctx.fillText("f'(x)",42,35);
+}
+
+window.addEventListener('resize', () => drawChain(currentFn));
+window.addEventListener('load', () => setTimeout(() => setFn(0), 300));
+setTimeout(() => setFn(0), 500);
+
+// ── PRACTICE ──
+const answers = [
+  {
+    ok: s => norm(s)===norm('8(2x+3)^3'),
+    sol: 'Outer: \\((\\square)^4\\), inner: \\(2x+3\\), inner derivative: \\(2\\). Chain Rule: \\(4(2x+3)^3\\cdot 2=8(2x+3)^3\\).'
+  },
+  {
+    ok: s => norm(s)===norm('-10xsin(5x^2)') || norm(s)===norm('-sin(5x^2)*10x') || norm(s)===norm('-10x*sin(5x^2)'),
+    sol: 'Outer: \\(\\cos(\\square)\\to-\\sin(\\square)\\). Inner: \\(5x^2\\), derivative \\(10x\\). Answer: \\(-\\sin(5x^2)\\cdot 10x=-10x\\sin(5x^2)\\).'
+  },
+  {
+    ok: s => norm(s)===norm('3e^(3x-1)') || norm(s)===norm('3*e^(3x-1)'),
+    sol: '\\(e^u\\) differentiates to \\(e^u\\). Inner derivative of \\(3x-1\\) is \\(3\\). Answer: \\(3e^{3x-1}\\).'
+  },
+  {
+    ok: s => norm(s)===norm('-x/sqrt(9-x^2)') || norm(s)===norm('-x*(9-x^2)^(-1/2)') || norm(s)===norm('(-x)/sqrt(9-x^2)'),
+    sol: 'Rewrite: \\((9-x^2)^{1/2}\\). Outer derivative: \\(\\frac{1}{2}(9-x^2)^{-1/2}\\). Inner derivative: \\(-2x\\). Result: \\(\\frac{1}{2}(9-x^2)^{-1/2}\\cdot(-2x)=\\frac{-x}{\\sqrt{9-x^2}}\\).'
+  },
+  {
+    ok: s => {
+      const v = parseFloat(s.replace(/[^0-9.\-\/]/g,''));
+      return Math.abs(v - 1) < 0.001;
+    },
+    sol: '\\(y=[\\sin x]^2\\). Chain Rule: \\(y\'=2\\sin x\\cos x=\\sin(2x)\\). At \\(x=\\pi/4\\): \\(\\sin(\\pi/2)=1\\). Slope \\(=1\\).'
+  }
+];
+
+function norm(s) {
+  return s.trim().replace(/\s+/g,'').replace(/\*/g,'').replace(/\^{([^}]+)}/g,'^($1)').replace(/\\[a-z]+/g,'').toLowerCase();
+}
+
+let score=0;
+const done=[false,false,false,false,false];
+
+function checkAnswer(i){
+  if(done[i])return;
+  const input=document.getElementById('q'+i).value;
+  const fb=document.getElementById('fb'+i);
+  const card=document.getElementById('qcard'+i);
+  const ok=answers[i].ok(input);
+  card.classList.add(ok?'correct':'wrong');
+  fb.className='quiz-feedback show '+(ok?'correct-fb':'wrong-fb');
+  fb.innerHTML=(ok?'✓ Correct! ':'✗ Not quite. ')+answers[i].sol;
+  if(ok&&!done[i]){score++;document.getElementById('scoreNum').textContent=score+' / 5';document.getElementById('dot'+i).classList.add('done');}
+  else if(!ok) document.getElementById('dot'+i).classList.add('miss');
+  done[i]=true;
+  if(window.renderMathInElement)renderMathInElement(fb);
+}
+
+document.querySelectorAll('.quiz-input').forEach((inp,i)=>{
+  inp.addEventListener('keydown',e=>{if(e.key==='Enter')checkAnswer(i);});
+});
+
+// ── NAV ACTIVE ──
+const secs=document.querySelectorAll('section[id]');
+const navLinks=document.querySelectorAll('.nav-link');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      navLinks.forEach(l=>l.classList.remove('active'));
+      const a=document.querySelector(`.nav-link[href="#${e.target.id}"]`);
+      if(a)a.classList.add('active');
+    }
+  });
+},{threshold:0.35});
+secs.forEach(s=>obs.observe(s));
+</script>
+</body>
+</html>
